@@ -110,7 +110,7 @@ Key services in the Logical SanFrancisco Network (LSFN) support discovery, creat
 
 ### Commands, workflows and statecharts
 
-Higher-level business processes are modelled as *Commands* or statecharts: transitions (states) and CA (condition/action) rules control lifecycle. This makes a component’s process behaviour explicit and manipulable (and therefore reusable) — developers didn't have to rewrite “how an invoice moves from draft → posted → paid” for each app (see [State Diagram for a Business Object’s Lifecycle](#state-diagram-for-a-business-objects-lifecycle)).
+Higher-level business processes are modelled as *Commands* or statecharts: transitions (states) and CA (condition/action) rules control lifecycle. This makes a component’s process behaviour explicit and manipulable (and therefore reusable) — developers didn't have to rewrite how an invoice moves from draft → posted → paid for each app (see [State Diagram for a Business Object’s Lifecycle](#state-diagram-for-a-business-objects-lifecycle)).
 
 ## Example sketch (pseudo API) — simplified
 
