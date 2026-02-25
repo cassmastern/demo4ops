@@ -32,6 +32,7 @@ gantt
 
 ### History based on select commits
 
+- 2026.02.25 Updated SMART-ON-FHIR Deep Dive: 'wrap-up', nav polish, removed 'noise', examples more 'copy-paste-safe', bug fixes.
 - 2025.12.09 New section with a couple of article translations to explore automation with DeepL API and Vertex AI for 'naturalness check':[Translations](../sec_freeform/sec_transl/index.md). Infrastructure/scripts/workflow: TBD for 2026 😉
 - 2025.11.02 New set of topics for exploring[API documentation](../sec_api/index.md) features.
 - 2025.11.01 Major refactoring of JS files (theme switcher, metadata injector) and SpotlightJS
