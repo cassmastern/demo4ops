@@ -841,9 +841,44 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#the-end-to-end-story-in-one-page">
+<span class="md-ellipsis">
+      The end-to-end story (in one page)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#smart-on-fhir-complete-architecture-diagram">
 <span class="md-ellipsis">
       SMART-on-FHIR Complete Architecture (diagram)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-to-read-the-architecture-diagram">
+<span class="md-ellipsis">
+      How to “read” the architecture diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-implementation-pitfalls-and-how-to-avoid-them">
+<span class="md-ellipsis">
+      Common implementation pitfalls (and how to avoid them)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#suggested-next-steps-practical-projects">
+<span class="md-ellipsis">
+      Suggested next steps (practical projects)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#where-to-go-back-and-review">
+<span class="md-ellipsis">
+      Where to go back and review
     </span>
 </a>
 </li>
@@ -1168,9 +1203,44 @@
     </label>
 <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
 <li class="md-nav__item">
+<a class="md-nav__link" href="#the-end-to-end-story-in-one-page">
+<span class="md-ellipsis">
+      The end-to-end story (in one page)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#smart-on-fhir-complete-architecture-diagram">
 <span class="md-ellipsis">
       SMART-on-FHIR Complete Architecture (diagram)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#how-to-read-the-architecture-diagram">
+<span class="md-ellipsis">
+      How to “read” the architecture diagram
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#common-implementation-pitfalls-and-how-to-avoid-them">
+<span class="md-ellipsis">
+      Common implementation pitfalls (and how to avoid them)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#suggested-next-steps-practical-projects">
+<span class="md-ellipsis">
+      Suggested next steps (practical projects)
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#where-to-go-back-and-review">
+<span class="md-ellipsis">
+      Where to go back and review
     </span>
 </a>
 </li>
@@ -1182,9 +1252,23 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="summary">Summary</h1>
-<blockquote>
-<p>TBD; recap; placement</p>
-</blockquote>
+<p>This deep dive covered SMART-on-FHIR from “what is it?” to “how do I actually build and debug a working client?”.</p>
+<p>If you only remember one thing: <strong>SMART is the authorization + launch context; FHIR is the data model + API surface.</strong> Real-world apps succeed when they treat these as <em>one integrated contract</em> (not two separate topics).</p>
+<hr/>
+<h2 id="the-end-to-end-story-in-one-page">The end-to-end story (in one page)</h2>
+<ul>
+<li><strong>You start with a FHIR base URL</strong> (an EHR’s FHIR endpoint, or a sandbox).</li>
+<li><strong>You discover SMART capabilities dynamically</strong> via <code>/.well-known/smart-configuration</code> (auth endpoints, supported scopes, PKCE methods, etc.).</li>
+<li><strong>You launch + authorize</strong> (EHR launch or standalone) using OAuth 2.0 Authorization Code (and <strong>PKCE</strong> for public clients).</li>
+<li><strong>You get tokens</strong> and (optionally) OpenID Connect identity claims (<code>openid</code>, <code>fhirUser</code>, etc.).</li>
+<li><strong>You call FHIR REST APIs</strong> to read/search resources (and sometimes write), handling:</li>
+<li>Search/pagination/bundles</li>
+<li>Resource relationships (<code>reference</code>, <code>_include</code>, <code>_revinclude</code>)</li>
+<li>Terminology (codes, <code>CodeableConcept</code>, value sets)</li>
+<li>Validation + error handling (<code>OperationOutcome</code>)</li>
+<li><strong>You secure + operationalize</strong>: token storage, refresh, logout/revocation, logging, least-privilege scopes, and safe UI defaults.</li>
+</ul>
+<hr/>
 <h2 id="smart-on-fhir-complete-architecture-diagram">SMART-on-FHIR Complete Architecture (diagram)</h2>
 <div class="mermaid">graph TB
     subgraph Client["Client Application Layer"]
@@ -1258,6 +1342,53 @@
     ValidationEngine --&gt; Terminology
     SearchEngine --&gt; Terminology
 </div>
+<hr/>
+<h2 id="how-to-read-the-architecture-diagram">How to “read” the architecture diagram</h2>
+<ul>
+<li><strong>Client apps</strong> (web/mobile/desktop) shouldn’t hardcode vendor endpoints or assumptions; they rely on a SMART client component to unify:</li>
+<li>Discovery</li>
+<li>OAuth redirect handling</li>
+<li>Token lifecycle</li>
+<li>“FHIR base URL + patient context” wiring</li>
+<li><strong>Authorization server</strong> decisions are about <em>identity, consent, and policy</em>:</li>
+<li>Who is the user?</li>
+<li>What scopes are requested and allowed?</li>
+<li>Is the app public vs confidential (and is PKCE required)?</li>
+<li><strong>FHIR server</strong> decisions are about <em>data access and correctness</em>:</li>
+<li>Are you authorized for this resource type + instance?</li>
+<li>Can the server satisfy your search query efficiently?</li>
+<li>If you are writing, does the resource validate against base spec and profiles?</li>
+<li><strong>Terminology services</strong> are the “hidden dependency” for correctness:</li>
+<li>Meaningful clinical queries often depend on codes (LOINC/SNOMED/RxNorm) and value sets, not strings.</li>
+</ul>
+<hr/>
+<h2 id="common-implementation-pitfalls-and-how-to-avoid-them">Common implementation pitfalls (and how to avoid them)</h2>
+<ul>
+<li><strong>Treating discovery as optional</strong>: always retrieve and cache <code>/.well-known/smart-configuration</code>; don’t assume endpoints/scopes.</li>
+<li><strong>Requesting overly broad scopes</strong>: start minimal (e.g., <code>patient/Patient.read patient/Observation.read</code>) and expand intentionally.</li>
+<li><strong>Skipping PKCE</strong> (public clients): for SPAs/mobile, PKCE is non-negotiable in practice.</li>
+<li><strong>Assuming references always resolve</strong>: in the wild, you will see missing/broken references; code defensively and degrade gracefully.</li>
+<li><strong>Ignoring pagination</strong>: many “it works in the sandbox” apps fail against real EHRs because they don’t follow <code>Bundle.link[relation="next"]</code>.</li>
+<li><strong>Not surfacing <code>OperationOutcome</code></strong>: it’s the closest thing FHIR has to a structured error report; parse and display it.</li>
+</ul>
+<hr/>
+<h2 id="suggested-next-steps-practical-projects">Suggested next steps (practical projects)</h2>
+<ul>
+<li><strong>Add a second server target</strong>: run your client against two different endpoints and make discovery drive everything (no per-vendor config).</li>
+<li><strong>Add a “resource graph fetcher”</strong>: given a <code>Patient/{id}</code>, fetch a coherent clinical slice using:</li>
+<li><code>Observation?patient=...&amp;category=...</code></li>
+<li><code>_include</code> / <code>_revinclude</code> where useful</li>
+<li>Bundle pagination handling</li>
+<li><strong>Add profile-aware validation</strong>: detect and explain “base FHIR valid, profile invalid” cases (e.g., US Core).</li>
+<li><strong>Threat model your app</strong>: map token storage, redirect handling, and error surfaces; implement mitigations from your own checklist.</li>
+</ul>
+<hr/>
+<h2 id="where-to-go-back-and-review">Where to go back and review</h2>
+<ul>
+<li><strong>If OAuth felt fuzzy</strong>: revisit SMART authorization + configuration discovery.</li>
+<li><strong>If searches felt fuzzy</strong>: revisit search parameters, bundles, and pagination patterns.</li>
+<li><strong>If the data model felt fuzzy</strong>: revisit data types, terminology, and relationships.</li>
+</ul>
 </article>
 </div>
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>

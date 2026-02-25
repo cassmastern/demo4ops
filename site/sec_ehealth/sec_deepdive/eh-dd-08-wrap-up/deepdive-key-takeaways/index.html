@@ -1247,26 +1247,42 @@
 <article class="md-content__inner md-typeset">
 <h1>Deepdive key takeaways</h1>
 <h2 id="key-takeaways">Key Takeaways</h2>
-<p>Essential aspects of SMART-on-FHIR:</p>
+<p>Essential aspects of SMART-on-FHIR—what to internalize so you can build and troubleshoot real integrations.</p>
 <h3 id="core-concepts">Core Concepts</h3>
 <ol>
-<li><strong>SMART-on-FHIR</strong> combines OAuth 2.0 authorization with FHIR REST APIs to enable secure app integration with EHR systems</li>
-<li><strong>FHIR Resources</strong> are the building blocks:</li>
-<li><strong>Patient</strong> : Demographics and administrative data</li>
-<li><strong>Observation</strong> : Clinical measurements and findings</li>
-<li><strong>Condition</strong> : Diagnoses and problems</li>
-<li><strong>MedicationRequest</strong> : Prescriptions and orders</li>
-<li><strong>Encounter</strong> : Healthcare interactions</li>
-<li>And many more interconnected resources</li>
-<li><strong>Authorization Flow</strong> :</li>
-<li>Launch → Authorization → Token Exchange → API Access</li>
-<li>Scopes control access granularity (patient/Resource.read)</li>
-<li>Context provides patient/encounter information</li>
-<li><strong>FHIR Search</strong> is powerful:</li>
-<li>Parameter-based queries</li>
-<li>Chaining and reverse chaining</li>
-<li>Include/revinclude for related resources</li>
-<li>Pagination for large result sets</li>
+<li><strong>SMART-on-FHIR = OAuth + context, on top of FHIR</strong></li>
+<li><strong>FHIR</strong> answers: <em>what data exists and how do I query it?</em></li>
+<li>
+<p><strong>SMART</strong> answers: <em>who is the user, what can they access, and what patient/encounter is “in context”?</em></p>
+</li>
+<li>
+<p><strong>Everything interesting in FHIR is a graph</strong></p>
+</li>
+<li>You rarely want a single resource in isolation.</li>
+<li>You will constantly traverse references: <code>Observation.subject → Patient</code>, <code>DiagnosticReport.result → Observation</code>, <code>Encounter.participant → PractitionerRole</code>, etc.</li>
+<li>
+<p>Your app architecture should assume <em>graph navigation</em> and <em>partial/missing edges</em>.</p>
+</li>
+<li>
+<p><strong>Bundles are not “just arrays”</strong></p>
+</li>
+<li>Search results, includes, paging links, transactions, and errors all show up in bundle-shaped responses.</li>
+<li>
+<p>Production apps must follow <code>Bundle.link[relation="next"]</code> and handle “include” entries distinctly from “match” entries.</p>
+</li>
+<li>
+<p><strong>Scopes are a product requirement, not an implementation detail</strong></p>
+</li>
+<li>Scopes drive user trust, security review outcomes, and whether an EHR will even approve the app.</li>
+<li>Start with least privilege; expand only when you can explain the user value.</li>
+<li>
+<p>Expect variation between servers (supported scopes and policy decisions).</p>
+</li>
+<li>
+<p><strong>Terminology is the difference between “works” and “clinically correct”</strong></p>
+</li>
+<li>If you query by strings (“glucose”), you’ll ship a fragile app.</li>
+<li>Query by codes (LOINC/SNOMED/RxNorm) and be explicit about systems.</li>
 </ol>
 <h3 id="practical-implementation">Practical Implementation</h3>
 <p>The interactive React application demonstrates:</p>
@@ -1278,13 +1294,20 @@
 </ul>
 <h3 id="best-practices">Best Practices</h3>
 <ul>
-<li>Always validate resources before submission</li>
-<li>Implement proper error handling for 401/403/404 responses</li>
-<li>Use refresh tokens for long-running sessions</li>
-<li>Cache capability statements</li>
-<li>Log OAuth flow for debugging</li>
-<li>Test with multiple patient scenarios</li>
-<li>Follow US Core or relevant implementation guides</li>
+<li>Always validate resources before submission (base spec <strong>and</strong> required profiles)</li>
+<li>Implement structured error handling:</li>
+<li>Parse and display <code>OperationOutcome.issue[]</code></li>
+<li>Treat 401/403 distinctly (auth vs authorization/policy)</li>
+<li>Build “retry vs fail” rules around 429/5xx</li>
+<li>Treat discovery as mandatory:</li>
+<li>Cache <code>/.well-known/smart-configuration</code> (with sensible TTL)</li>
+<li>Don’t hardcode endpoints, PKCE support, or scope availability</li>
+<li>Handle token lifecycle intentionally:</li>
+<li>Expiration, refresh (where allowed), revocation/log-out, and safe storage</li>
+<li>Test against more than one dataset:</li>
+<li>Multiple patients, edge cases (no vitals, missing references, sparse coding)</li>
+<li>Prefer an implementation guide (IG) mindset:</li>
+<li>Base FHIR is not enough; most real deployments expect an IG like US Core</li>
 </ul>
 <h3 id="resources-for-further-learning">Resources for Further Learning</h3>
 <ul>

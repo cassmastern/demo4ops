@@ -1,26 +1,30 @@
 ## Key Takeaways
 
-Essential aspects of SMART-on-FHIR:
+Essential aspects of SMART-on-FHIR—what to internalize so you can build and troubleshoot real integrations.
 
 ### Core Concepts
 
-1. **SMART-on-FHIR** combines OAuth 2.0 authorization with FHIR REST APIs to enable secure app integration with EHR systems
-2. **FHIR Resources** are the building blocks:
-   * **Patient** : Demographics and administrative data
-   * **Observation** : Clinical measurements and findings
-   * **Condition** : Diagnoses and problems
-   * **MedicationRequest** : Prescriptions and orders
-   * **Encounter** : Healthcare interactions
-   * And many more interconnected resources
-3. **Authorization Flow** :
-   * Launch → Authorization → Token Exchange → API Access
-   * Scopes control access granularity (patient/Resource.read)
-   * Context provides patient/encounter information
-4. **FHIR Search** is powerful:
-   * Parameter-based queries
-   * Chaining and reverse chaining
-   * Include/revinclude for related resources
-   * Pagination for large result sets
+1. **SMART-on-FHIR = OAuth + context, on top of FHIR**
+   - **FHIR** answers: *what data exists and how do I query it?*
+   - **SMART** answers: *who is the user, what can they access, and what patient/encounter is “in context”?*
+
+2. **Everything interesting in FHIR is a graph**
+   - You rarely want a single resource in isolation.
+   - You will constantly traverse references: `Observation.subject → Patient`, `DiagnosticReport.result → Observation`, `Encounter.participant → PractitionerRole`, etc.
+   - Your app architecture should assume *graph navigation* and *partial/missing edges*.
+
+3. **Bundles are not “just arrays”**
+   - Search results, includes, paging links, transactions, and errors all show up in bundle-shaped responses.
+   - Production apps must follow `Bundle.link[relation="next"]` and handle “include” entries distinctly from “match” entries.
+
+4. **Scopes are a product requirement, not an implementation detail**
+   - Scopes drive user trust, security review outcomes, and whether an EHR will even approve the app.
+   - Start with least privilege; expand only when you can explain the user value.
+   - Expect variation between servers (supported scopes and policy decisions).
+
+5. **Terminology is the difference between “works” and “clinically correct”**
+   - If you query by strings (“glucose”), you’ll ship a fragile app.
+   - Query by codes (LOINC/SNOMED/RxNorm) and be explicit about systems.
 
 ### Practical Implementation
 
@@ -33,13 +37,20 @@ The interactive React application demonstrates:
 
 ### Best Practices
 
-* Always validate resources before submission
-* Implement proper error handling for 401/403/404 responses
-* Use refresh tokens for long-running sessions
-* Cache capability statements
-* Log OAuth flow for debugging
-* Test with multiple patient scenarios
-* Follow US Core or relevant implementation guides
+* Always validate resources before submission (base spec **and** required profiles)
+* Implement structured error handling:
+  - Parse and display `OperationOutcome.issue[]`
+  - Treat 401/403 distinctly (auth vs authorization/policy)
+  - Build “retry vs fail” rules around 429/5xx
+* Treat discovery as mandatory:
+  - Cache `/.well-known/smart-configuration` (with sensible TTL)
+  - Don’t hardcode endpoints, PKCE support, or scope availability
+* Handle token lifecycle intentionally:
+  - Expiration, refresh (where allowed), revocation/log-out, and safe storage
+* Test against more than one dataset:
+  - Multiple patients, edge cases (no vitals, missing references, sparse coding)
+* Prefer an implementation guide (IG) mindset:
+  - Base FHIR is not enough; most real deployments expect an IG like US Core
 
 ### Resources for Further Learning
 

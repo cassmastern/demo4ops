@@ -116,12 +116,11 @@ sequenceDiagram
     
     App->>Auth: 9. Token request
     Note right of App: POST /token<br/>grant_type=authorization_code<br/>code=...<br/>redirect_uri=...<br/>client_id=...
-    
-    Auth->>FHIR: 10. Validate and create context
-    FHIR-->>Auth: Context created
-    
+
+    Note over Auth,FHIR: Context is created/associated within the EHR ecosystem<br/>Implementation detail: may be internal, or via shared session/state
+
     Auth-->>App: 11. Access token response
-    Note left of Auth: access_token<br/>token_type: Bearer<br/>expires_in<br/>scope<br/>patient (context)<br/>refresh_token
+    Note left of Auth: access_token<br/>token_type: Bearer<br/>expires_in<br/>scope<br/>patient (optional)<br/>encounter (optional)<br/>refresh_token (optional)
     
     App->>FHIR: 12. API request with token
     Note right of App: GET /Patient/123<br/>Authorization: Bearer [token]
@@ -137,6 +136,9 @@ sequenceDiagram
     Auth-->>App: 16. New access token
     Note left of Auth: access_token<br/>expires_in<br/>refresh_token
 ```
+
+!!! note
+    In SMART, the `patient` and `encounter` fields in the token response are **launch-context hints** (when available). Don’t assume they will always be present—apps must still function when context is absent (e.g., some standalone flows, or when the server chooses not to return it).
 
 Let's examine the flow step by step.
 

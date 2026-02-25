@@ -14,8 +14,7 @@ This diagram is intentionally dense. Don't try to memorize it—use it as:
 ---
 
 ### FHIR Resource Relationships Matrix (Diagram)
-
-> diagram version1 (TBD::archive)
+Use this as a map, not something to memorize. Start at `Patient` and trace outward based on your feature (labs, meds, scheduling, billing, etc.).
 
 ```mermaid
 graph TD
@@ -134,146 +133,8 @@ graph TD
     Coverage -->|payor| Organization
 ```
 
-> diagram version2 (TBD::placement)
-
-```puml
-@startuml FHIR_Resource_Relationships
-' Diagram: FHIR Resource Relationship Map
-
-hide circle
-skinparam linetype ortho
-skinparam entity {
-  BackgroundColor White
-  BorderColor Black
-  FontSize 11
-}
-
-' Core Actors
-entity Patient
-entity Practitioner
-entity PractitionerRole
-entity Organization
-entity Location
-
-' Clinical Events
-entity Encounter
-entity Condition
-entity Observation
-entity Procedure
-
-' Medications
-entity MedicationRequest
-entity Medication
-entity MedicationDispense
-entity MedicationAdministration
-
-' Immunization & Allergies
-entity AllergyIntolerance
-entity Immunization
-
-' Diagnostics
-entity DiagnosticReport
-entity Specimen
-
-' Care Planning
-entity CarePlan
-entity Goal
-entity ServiceRequest
-
-' Documentation
-entity DocumentReference
-entity Composition
-
-' Scheduling
-entity Appointment
-entity Slot
-entity Schedule
-
-' Financials
-entity Coverage
-entity Claim
-entity ExplanationOfBenefit
-
-' Relationships (directional, editorially tagged)
-Patient --> Encounter : subject
-Patient --> Condition : subject
-Patient --> Observation : subject
-Patient --> Procedure : subject
-Patient --> MedicationRequest : subject
-Patient --> AllergyIntolerance : patient
-Patient --> Immunization : patient
-Patient --> DiagnosticReport : subject
-Patient --> CarePlan : subject
-Patient --> Goal : subject
-Patient --> DocumentReference : subject
-Patient --> Appointment : actor
-Patient --> Coverage : beneficiary
-
-Practitioner --> PractitionerRole : practitioner
-Organization --> PractitionerRole : organization
-Location --> PractitionerRole : location
-
-PractitionerRole --> Encounter : participant
-PractitionerRole --> Procedure : performer
-PractitionerRole --> MedicationRequest : requester
-PractitionerRole --> Observation : performer
-PractitionerRole --> Condition : asserter
-PractitionerRole --> Appointment : actor
-
-Organization --> Patient : managingOrganization
-Organization --> Encounter : serviceProvider
-
-Location --> Encounter : location
-
-Encounter --> Condition : encounter
-Encounter --> Observation : encounter
-Encounter --> Procedure : encounter
-Encounter --> MedicationRequest : encounter
-Encounter --> DiagnosticReport : encounter
-
-Condition --> Observation : evidence
-Condition --> CarePlan : addresses
-
-MedicationRequest --> Medication : medication
-MedicationRequest --> CarePlan : basedOn
-MedicationDispense --> Medication : medication
-MedicationDispense --> MedicationRequest : authorizingPrescription
-MedicationAdministration --> Medication : medication
-MedicationAdministration --> MedicationRequest : request
-
-DiagnosticReport --> Observation : result
-DiagnosticReport --> Specimen : specimen
-DiagnosticReport --> ServiceRequest : basedOn
-
-Observation --> Specimen : specimen
-Observation --> ServiceRequest : basedOn
-
-CarePlan --> Goal : goal
-CarePlan --> ServiceRequest : activity
-
-ServiceRequest --> Patient : subject
-ServiceRequest --> PractitionerRole : requester
-
-DocumentReference --> Patient : subject
-DocumentReference --> Encounter : context
-
-Composition --> Patient : subject
-Composition --> Encounter : encounter
-Composition --> PractitionerRole : author
-
-Appointment --> Slot : slot
-Slot --> Schedule : schedule
-Schedule --> PractitionerRole : actor
-Schedule --> Location : actor
-
-Claim --> Patient : patient
-Claim --> PractitionerRole : provider
-ExplanationOfBenefit --> Patient : patient
-ExplanationOfBenefit --> Claim : claim
-Coverage --> Organization : payor
-
-@enduml
-```
+!!! tip
+    This diagram is most valuable when you turn it into a fetch plan: decide which edges you’ll traverse with `_include`/`_revinclude`, and which ones you’ll load on demand to keep pages fast.
 
 Let's delve into WHY each relationship exists and how to use it.
 

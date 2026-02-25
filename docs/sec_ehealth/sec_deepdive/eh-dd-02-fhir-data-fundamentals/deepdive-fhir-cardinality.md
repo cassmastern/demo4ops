@@ -495,8 +495,15 @@ Patient.name: 1..*
 **Invalid**:
 
 ```json
-{"name": []}  // Empty array not allowed
-// Missing name field entirely
+{"name": []}
+```
+
+An empty array violates `1..*` cardinality (you must provide at least one element). In practice, it’s also a good rule to **omit repeating fields entirely when you have no values**.
+
+Also invalid (omitted entirely):
+
+```text
+// name missing
 ```
 
 ---
@@ -569,10 +576,12 @@ Patient.identifier: 0..*
 
 ```json
 // Missing entirely
-{"identifier": []}  // Empty array (semantically useless but valid)
+{"identifier": []}
 {"identifier": [{"system": "http://hospital.org", "value": "MRN-123"}]}
 {"identifier": [{"system": "http://hospital.org", "value": "MRN-123"}, {"system": "http://hl7.org/fhir/sid/us-ssn", "value": "123-45-6789"}]}
 ```
+
+**Note**: `{"identifier": []}` is *technically representable*, but it’s usually not worth emitting—many servers and downstream tools treat empty arrays as noise. Prefer omitting `identifier` entirely when you have none.
 
 ---
 

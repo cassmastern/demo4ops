@@ -1548,8 +1548,7 @@ https://fhir-myrecord.cerner.com/r4/.well-known/smart-configuration
 <span class="w">  </span><span class="nt">"response_types_supported"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">"code"</span><span class="p">,</span>
 <span class="w">    </span><span class="s2">"code id_token"</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">"id_token"</span><span class="p">,</span>
-<span class="w">    </span><span class="s2">"refresh_token"</span>
+<span class="w">    </span><span class="s2">"id_token"</span>
 <span class="w">  </span><span class="p">],</span>
 <span class="w">  </span><span class="nt">"capabilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="s2">"launch-ehr"</span><span class="p">,</span>
@@ -1577,6 +1576,14 @@ https://fhir-myrecord.cerner.com/r4/.well-known/smart-configuration
 <span class="w">  </span><span class="nt">"management_endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://launch.smarthealthit.org/v/r4/auth/manage"</span>
 <span class="p">}</span>
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>response_types_supported</code> describes which <strong>OAuth/OIDC response types</strong> the authorization endpoint supports (for SMART, <code>code</code> is the most important). A refresh token is <strong>not</strong> a response type; refresh is represented via <code>grant_types_supported: ["refresh_token"]</code> and (typically) the SMART scope <code>offline_access</code> plus the capability <code>permission-offline</code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some discovery documents contain extra, vendor-specific fields (for example <code>management_endpoint</code>). Treat unknown fields as optional hints—not requirements—and rely on the standardized ones for interoperability.</p>
+</div>
 <p>Let's break down each section:</p>
 <h3 id="oauth-endpoints">OAuth Endpoints</h3>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>

@@ -1903,8 +1903,11 @@
 <span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shaw"</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">"use"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nickname"</span><span class="p">,</span><span class="w"> </span><span class="nt">"given"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Vicky"</span><span class="p">]}]}</span>
 </code></pre></div>
 <p><strong>Invalid</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">[]}</span><span class="w">  </span><span class="c1">// Empty array not allowed</span>
-<span class="c1">// Missing name field entirely</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">[]}</span>
+</code></pre></div>
+<p>An empty array violates <code>1..*</code> cardinality (you must provide at least one element). In practice, it’s also a good rule to <strong>omit repeating fields entirely when you have no values</strong>.</p>
+<p>Also invalid (omitted entirely):</p>
+<div class="highlight"><pre><span></span><code>// name missing
 </code></pre></div>
 <hr/>
 <h3 id="pattern-2-exactly-one">Pattern 2: Exactly One</h3>
@@ -1943,10 +1946,11 @@
 <p><strong>Validation</strong>: Can be absent, or have one or more values.</p>
 <p><strong>Valid</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Missing entirely</span>
-<span class="p">{</span><span class="nt">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="p">[]}</span><span class="w">  </span><span class="c1">// Empty array (semantically useless but valid)</span>
+<span class="p">{</span><span class="nt">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="p">[]}</span>
 <span class="p">{</span><span class="nt">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://hospital.org"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MRN-123"</span><span class="p">}]}</span>
 <span class="p">{</span><span class="nt">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://hospital.org"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MRN-123"</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">"system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://hl7.org/fhir/sid/us-ssn"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123-45-6789"</span><span class="p">}]}</span>
 </code></pre></div>
+<p><strong>Note</strong>: <code>{"identifier": []}</code> is <em>technically representable</em>, but it’s usually not worth emitting—many servers and downstream tools treat empty arrays as noise. Prefer omitting <code>identifier</code> entirely when you have none.</p>
 <hr/>
 <h3 id="pattern-5-conditional-requirements">Pattern 5: Conditional Requirements</h3>
 <p><strong>Example</strong>: Observation value vs. dataAbsentReason.</p>

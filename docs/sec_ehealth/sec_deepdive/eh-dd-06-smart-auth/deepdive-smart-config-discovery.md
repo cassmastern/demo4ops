@@ -80,8 +80,7 @@ Here is a SMART configuration example:
   "response_types_supported": [
     "code",
     "code id_token",
-    "id_token",
-    "refresh_token"
+    "id_token"
   ],
   "capabilities": [
     "launch-ehr",
@@ -109,6 +108,12 @@ Here is a SMART configuration example:
   "management_endpoint": "https://launch.smarthealthit.org/v/r4/auth/manage"
 }
 ```
+
+!!! note
+    `response_types_supported` describes which **OAuth/OIDC response types** the authorization endpoint supports (for SMART, `code` is the most important). A refresh token is **not** a response type; refresh is represented via `grant_types_supported: ["refresh_token"]` and (typically) the SMART scope `offline_access` plus the capability `permission-offline`.
+
+!!! note
+    Some discovery documents contain extra, vendor-specific fields (for example `management_endpoint`). Treat unknown fields as optional hints—not requirements—and rely on the standardized ones for interoperability.
 
 Let's break down each section:
 

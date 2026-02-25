@@ -14,9 +14,7 @@ Without bundles, apps would need hundreds of individual HTTP requests to fetch a
 
 ## Bundle Types and Structures Matrix (Diagram)
 
-The following is a diagram of bundle types and structures for visual reference.
-
-> diagram version1 (TBD::archive)
+This diagram shows the core `Bundle` shape and the major per-entry sub-objects you’ll encounter across bundle types.
 
 ```mermaid
 graph TD
@@ -60,87 +58,8 @@ graph TD
     Response --> RespLastMod[lastModified]
 ```
 
-> diagram version2 (TBD::placement)
-
-```puml
-@startuml FHIR_Bundle_Resource
-' Diagram: FHIR Bundle Resource Structure
-
-hide circle
-skinparam linetype ortho
-skinparam entity {
-  BackgroundColor White
-  BorderColor Black
-  FontSize 12
-}
-
-entity "Bundle" as Bundle {
-  * type : code <<REQUIRED>>
-  * total : integer [0..1]
-  * link[] : Bundle.Link [0..*]
-  * entry[] : Bundle.Entry [0..*]
-}
-
-entity "Bundle.Type" as Type {
-  + searchset
-  + batch
-  + transaction
-  + history
-  + collection
-  + document
-}
-
-entity "Bundle.Link" as Link {
-  * relation : string <<REQUIRED>>
-  * url : uri <<REQUIRED>>
-}
-
-entity "Link.Relation" as LinkRel {
-  + self
-  + next
-  + previous
-  + first
-  + last
-}
-
-entity "Bundle.Entry" as Entry {
-  * fullUrl : uri [0..1]
-  * resource : Resource [0..1]
-  * search : Bundle.Search [0..1]
-  * request : Bundle.Request [0..1]
-  * response : Bundle.Response [0..1]
-}
-
-entity "Bundle.Search" as Search {
-  * mode : code [0..1] <<match/include>>
-  * score : decimal [0..1]
-}
-
-entity "Bundle.Request" as Request {
-  * method : code <<GET/POST/PUT/DELETE>>
-  * url : uri <<REQUIRED>>
-  * ifMatch : string [0..1]
-  * ifNoneExist : string [0..1]
-}
-
-entity "Bundle.Response" as Response {
-  * status : string <<REQUIRED>>
-  * location : uri [0..1]
-  * etag : string [0..1]
-  * lastModified : instant [0..1]
-}
-
-' Relationships
-Bundle --> Type : "type"
-Bundle --> Link : "link[]"
-Bundle --> Entry : "entry[]"
-Link --> LinkRel : "relation"
-Entry --> Search : "search"
-Entry --> Request : "request"
-Entry --> Response : "response"
-
-@enduml
-```
+!!! tip
+    When you’re debugging bundle-shaped responses, start with `type`, then scan `link[]`, then iterate `entry[]`. That’s the fastest way to orient yourself.
 
 Let's explore: 
 
