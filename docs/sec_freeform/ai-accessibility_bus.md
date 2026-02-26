@@ -260,8 +260,8 @@ print(IMG_MD.sub(lambda m: f"![{alt}]({m.group(1)})", text))
 ### 4) Failback Options (when AI or context is unavailable)
 
 1. **Template**: Insert structured placeholder (explicitly actionable):
-   * `alt: "Diagram – description pending; CI ticket #123"`
-   * `desc: "TODO: Provide narrative covering nodes, edges, and flow conditions."`
+    * `alt: "Diagram – description pending; CI ticket #123"`
+    * `desc: "TODO: Provide narrative covering nodes, edges, and flow conditions."`
 2. **Block Build**: CI fails if public build and any placeholders remain. (Non‑public builds can warn.)
 3. **Glossary Auto‑fill**: Minimal description synthesized from glossary keywords; tagged `confidence: low`.
 4. **Silent Degrade (Draft)**: Allow missing fields in draft builds; every instance is logged with file/line.

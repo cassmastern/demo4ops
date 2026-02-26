@@ -267,9 +267,9 @@ stop
 
 1. **Download SP Metadata** from each component's admin page:
 
-   - APP-A → `<URL to APP-A admin → SSO Settings → Download Metadata>`
-   - APP-B → `<URL to APP-B admin → Authentication → SAML → Export Metadata>`
-   - APP-C → `<URL to APP-C admin → Security → SSO → Get Metadata>`
+    - APP-A → `<URL to APP-A admin → SSO Settings → Download Metadata>`
+    - APP-B → `<URL to APP-B admin → Authentication → SAML → Export Metadata>`
+    - APP-C → `<URL to APP-C admin → Security → SSO → Get Metadata>`
 2. **Upload SP Metadata to IdP** (as a new Enterprise Application or Relying Party).
 3. **Download IdP Metadata** and provide it to each component's admin panel.
 
@@ -346,18 +346,18 @@ stop
 1. In Azure AD → *Enterprise Applications* → *New Application* → *Create your own application*.
 2. Enter:
 
-   - **Name:** `APP-A SAML SSO`
-   - **Identifier (Entity ID):** `<crm.company.com/saml/metadata>`
-   - **Reply URL (ACS):** `<crm.company.com/saml/acs>`
-   - **Sign on URL:** `<crm.company.com>` (optional)
-   - **Logout URL:** `<crm.company.com/saml/logout>`
+    - **Name:** `APP-A SAML SSO`
+    - **Identifier (Entity ID):** `<crm.company.com/saml/metadata>`
+    - **Reply URL (ACS):** `<crm.company.com/saml/acs>`
+    - **Sign on URL:** `<crm.company.com>` (optional)
+    - **Logout URL:** `<crm.company.com/saml/logout>`
 3. Upload the **SP certificate** (if required for assertion encryption).
 4. Configure attribute mappings:
 
-   - `user.userprincipalname` → `NameID` (format: emailAddress)
-   - `user.givenname` → `givenName`
-   - `user.surname` → `sn`
-   - `user.groups` → `groups` (ensure group claims are enabled)
+    - `user.userprincipalname` → `NameID` (format: emailAddress)
+    - `user.givenname` → `givenName`
+    - `user.surname` → `sn`
+    - `user.groups` → `groups` (ensure group claims are enabled)
 5. Assign users/groups who can sign in.
 6. Download **Federation Metadata XML** from the SAML Signing Certificate section.
 
@@ -374,24 +374,24 @@ stop
 1. Navigate to SSO/SAML settings in the admin panel
 2. Choose configuration method:
 
-   - **Option A (Recommended):** Upload IdP Metadata XML file
-   - **Option B:** Manual configuration using individual fields:
+    - **Option A (Recommended):** Upload IdP Metadata XML file
+    - **Option B:** Manual configuration using individual fields:
      - IdP Entity ID: `<from IdP metadata>`
      - IdP SSO URL: `<from IdP metadata>`
      - IdP SLO URL: `<from IdP metadata>`
      - IdP Certificate: Paste X.509 certificate (PEM format)
 3. Configure SAML settings:
 
-   - **NameID Format:** EmailAddress (urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress)
-   - **Expected Attributes:** Configure mapping (see Section 5)
-   - **Signature Validation:** Enable (required)
-   - **Assertion Encryption:** Enable if supported
-   - **Session Timeout:** `<recommended: 8 hours>`
+    - **NameID Format:** EmailAddress (urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress)
+    - **Expected Attributes:** Configure mapping (see Section 5)
+    - **Signature Validation:** Enable (required)
+    - **Assertion Encryption:** Enable if supported
+    - **Session Timeout:** `<recommended: 8 hours>`
 4. Set authentication mode:
 
-   - **Hybrid:** Allow both SSO and local credentials (recommended for testing)
-   - **SSO-Only:** Disable local authentication (production mode)
-   - **Important:** Keep at least one local admin account for emergency access
+    - **Hybrid:** Allow both SSO and local credentials (recommended for testing)
+    - **SSO-Only:** Disable local authentication (production mode)
+    - **Important:** Keep at least one local admin account for emergency access
 5. Save configuration and note any generated SP metadata URL
 
 ### SP Configuration Decision Tree
@@ -524,14 +524,14 @@ Configure in each SP's admin panel under: *User Management → Role Mapping* or 
 
 1. **JIT (Just-In-Time) Provisioning:**
 
-   - User account created automatically on first SSO login
-   - Profile attributes updated from SAML assertion each login
-   - Recommended for most scenarios
+    - User account created automatically on first SSO login
+    - Profile attributes updated from SAML assertion each login
+    - Recommended for most scenarios
 2. **Manual Provisioning:**
 
-   - User account pre-created by administrator
-   - SSO login updates existing account attributes
-   - Required for APP-C (per Section 3 notes)
+    - User account pre-created by administrator
+    - SSO login updates existing account attributes
+    - Required for APP-C (per Section 3 notes)
 
 If group information is not provided in SAML assertion, roles must be assigned manually in the local admin UI.
 
@@ -864,29 +864,29 @@ If SLO is supported by all components, enable global logout endpoints:
 
 1. **SP-Initiated Logout:**
 
-   - User clicks logout in application (e.g., APP-A)
-   - Application sends LogoutRequest to IdP
-   - IdP notifies all other SPs
-   - User logged out everywhere
+    - User clicks logout in application (e.g., APP-A)
+    - Application sends LogoutRequest to IdP
+    - IdP notifies all other SPs
+    - User logged out everywhere
 2. **IdP-Initiated Logout:**
 
-   - User logs out from IdP portal
-   - IdP sends LogoutRequest to all SPs
-   - Each SP destroys local session
+    - User logs out from IdP portal
+    - IdP sends LogoutRequest to all SPs
+    - Each SP destroys local session
 
 **Configuration Steps:**
 
 1. In each SP admin panel:
 
-   - Enable "Single Logout" feature
-   - Configure SLO endpoint URL
-   - Set SLO binding to HTTP-POST or HTTP-Redirect (match IdP requirement)
-   - Test SLO with pilot users
+    - Enable "Single Logout" feature
+    - Configure SLO endpoint URL
+    - Set SLO binding to HTTP-POST or HTTP-Redirect (match IdP requirement)
+    - Test SLO with pilot users
 2. In IdP admin panel:
 
-   - Verify all SP SLO endpoints are registered
-   - Enable global logout functionality
-   - Test IdP-initiated logout
+    - Verify all SP SLO endpoints are registered
+    - Enable global logout functionality
+    - Test IdP-initiated logout
 
 **Known Limitations:**
 

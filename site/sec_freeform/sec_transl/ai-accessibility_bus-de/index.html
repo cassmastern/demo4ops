@@ -1713,9 +1713,11 @@
 </code></pre></div>
 <h3 id="4-notfalloptionen-wenn-ai-oder-kontext-nicht-verfugbar-sind">4) Notfalloptionen (wenn AI oder Kontext nicht verfügbar sind)</h3>
 <ol>
-<li><strong>Vorlage</strong>: Strukturierten Platzhalter einfügen (explizit nachverfolgbar):</li>
+<li><strong>Vorlage</strong>: Strukturierten Platzhalter einfügen (explizit nachverfolgbar):<ul>
 <li><code>alt: "Diagramm - Beschreibung ausstehend; CI Ticket #123"</code></li>
 <li><code>desc: "TODO: Beschreibe Knoten, Kanten und Flussbedingungen"</code></li>
+</ul>
+</li>
 <li><strong>Build-Blockierung</strong>: CI schlägt fehl, wenn bei einem öffentlichen Build noch Platzhalter vorhanden sind. (Nicht-öffentliche Builds können warnen.)</li>
 <li><strong>Glossar-Autovervollständigung</strong>: Minimale Beschreibung, die aus den Schlüsselwörtern des Glossars synthetisiert wird; mit der Kennzeichnung <code>Vertrauen: niedrig</code>.</li>
 <li><strong>Zulassung fehlender Felder (Entwurf)</strong>: Erlaubt fehlende Felder in Entwurfs-Builds; jeder Fall wird mit Angabe von Datei und Zeile protokolliert.</li>

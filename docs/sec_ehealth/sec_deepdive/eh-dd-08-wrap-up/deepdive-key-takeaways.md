@@ -5,26 +5,26 @@ Essential aspects of SMART-on-FHIR—what to internalize so you can build and tr
 ### Core Concepts
 
 1. **SMART-on-FHIR = OAuth + context, on top of FHIR**
-   - **FHIR** answers: *what data exists and how do I query it?*
-   - **SMART** answers: *who is the user, what can they access, and what patient/encounter is “in context”?*
+    - **FHIR** answers: *what data exists and how do I query it?*
+    - **SMART** answers: *who is the user, what can they access, and what patient/encounter is “in context”?*
 
 2. **Everything interesting in FHIR is a graph**
-   - You rarely want a single resource in isolation.
-   - You will constantly traverse references: `Observation.subject → Patient`, `DiagnosticReport.result → Observation`, `Encounter.participant → PractitionerRole`, etc.
-   - Your app architecture should assume *graph navigation* and *partial/missing edges*.
+    - You rarely want a single resource in isolation.
+    - You will constantly traverse references: `Observation.subject → Patient`, `DiagnosticReport.result → Observation`, `Encounter.participant → PractitionerRole`, etc.
+    - Your app architecture should assume *graph navigation* and *partial/missing edges*.
 
 3. **Bundles are not “just arrays”**
-   - Search results, includes, paging links, transactions, and errors all show up in bundle-shaped responses.
-   - Production apps must follow `Bundle.link[relation="next"]` and handle “include” entries distinctly from “match” entries.
+    - Search results, includes, paging links, transactions, and errors all show up in bundle-shaped responses.
+    - Production apps must follow `Bundle.link[relation="next"]` and handle “include” entries distinctly from “match” entries.
 
 4. **Scopes are a product requirement, not an implementation detail**
-   - Scopes drive user trust, security review outcomes, and whether an EHR will even approve the app.
-   - Start with least privilege; expand only when you can explain the user value.
-   - Expect variation between servers (supported scopes and policy decisions).
+    - Scopes drive user trust, security review outcomes, and whether an EHR will even approve the app.
+    - Start with least privilege; expand only when you can explain the user value.
+    - Expect variation between servers (supported scopes and policy decisions).
 
 5. **Terminology is the difference between “works” and “clinically correct”**
-   - If you query by strings (“glucose”), you’ll ship a fragile app.
-   - Query by codes (LOINC/SNOMED/RxNorm) and be explicit about systems.
+    - If you query by strings (“glucose”), you’ll ship a fragile app.
+    - Query by codes (LOINC/SNOMED/RxNorm) and be explicit about systems.
 
 ### Practical Implementation
 

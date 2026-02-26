@@ -1716,9 +1716,11 @@
 </code></pre></div>
 <h3 id="4-failback-options-when-ai-or-context-is-unavailable">4) Failback Options (when AI or context is unavailable)</h3>
 <ol>
-<li><strong>Template</strong>: Insert structured placeholder (explicitly actionable):</li>
+<li><strong>Template</strong>: Insert structured placeholder (explicitly actionable):<ul>
 <li><code>alt: "Diagram – description pending; CI ticket #123"</code></li>
 <li><code>desc: "TODO: Provide narrative covering nodes, edges, and flow conditions."</code></li>
+</ul>
+</li>
 <li><strong>Block Build</strong>: CI fails if public build and any placeholders remain. (Non‑public builds can warn.)</li>
 <li><strong>Glossary Auto‑fill</strong>: Minimal description synthesized from glossary keywords; tagged <code>confidence: low</code>.</li>
 <li><strong>Silent Degrade (Draft)</strong>: Allow missing fields in draft builds; every instance is logged with file/line.</li>

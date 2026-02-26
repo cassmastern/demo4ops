@@ -258,8 +258,8 @@ print(IMG_MD.sub(lambda m: f"![{alt}]({m.group(1)})", text))
 ### 4) Notfalloptionen (wenn AI oder Kontext nicht verfügbar sind)
 
 1. **Vorlage**: Strukturierten Platzhalter einfügen (explizit nachverfolgbar):
-   * `alt: "Diagramm - Beschreibung ausstehend; CI Ticket #123"`
-   * `desc: "TODO: Beschreibe Knoten, Kanten und Flussbedingungen"`
+    * `alt: "Diagramm - Beschreibung ausstehend; CI Ticket #123"`
+    * `desc: "TODO: Beschreibe Knoten, Kanten und Flussbedingungen"`
 2. **Build-Blockierung**: CI schlägt fehl, wenn bei einem öffentlichen Build noch Platzhalter vorhanden sind. (Nicht-öffentliche Builds können warnen.)
 3. **Glossar-Autovervollständigung**: Minimale Beschreibung, die aus den Schlüsselwörtern des Glossars synthetisiert wird; mit der Kennzeichnung `Vertrauen: niedrig`.
 4. **Zulassung fehlender Felder (Entwurf)**: Erlaubt fehlende Felder in Entwurfs-Builds; jeder Fall wird mit Angabe von Datei und Zeile protokolliert.

@@ -1250,39 +1250,43 @@
 <p>Essential aspects of SMART-on-FHIR—what to internalize so you can build and troubleshoot real integrations.</p>
 <h3 id="core-concepts">Core Concepts</h3>
 <ol>
-<li><strong>SMART-on-FHIR = OAuth + context, on top of FHIR</strong></li>
-<li><strong>FHIR</strong> answers: <em>what data exists and how do I query it?</em></li>
 <li>
-<p><strong>SMART</strong> answers: <em>who is the user, what can they access, and what patient/encounter is “in context”?</em></p>
+<p><strong>SMART-on-FHIR = OAuth + context, on top of FHIR</strong></p>
+<ul>
+<li><strong>FHIR</strong> answers: <em>what data exists and how do I query it?</em></li>
+<li><strong>SMART</strong> answers: <em>who is the user, what can they access, and what patient/encounter is “in context”?</em></li>
+</ul>
 </li>
 <li>
 <p><strong>Everything interesting in FHIR is a graph</strong></p>
-</li>
+<ul>
 <li>You rarely want a single resource in isolation.</li>
 <li>You will constantly traverse references: <code>Observation.subject → Patient</code>, <code>DiagnosticReport.result → Observation</code>, <code>Encounter.participant → PractitionerRole</code>, etc.</li>
-<li>
-<p>Your app architecture should assume <em>graph navigation</em> and <em>partial/missing edges</em>.</p>
+<li>Your app architecture should assume <em>graph navigation</em> and <em>partial/missing edges</em>.</li>
+</ul>
 </li>
 <li>
 <p><strong>Bundles are not “just arrays”</strong></p>
-</li>
+<ul>
 <li>Search results, includes, paging links, transactions, and errors all show up in bundle-shaped responses.</li>
-<li>
-<p>Production apps must follow <code>Bundle.link[relation="next"]</code> and handle “include” entries distinctly from “match” entries.</p>
+<li>Production apps must follow <code>Bundle.link[relation="next"]</code> and handle “include” entries distinctly from “match” entries.</li>
+</ul>
 </li>
 <li>
 <p><strong>Scopes are a product requirement, not an implementation detail</strong></p>
-</li>
+<ul>
 <li>Scopes drive user trust, security review outcomes, and whether an EHR will even approve the app.</li>
 <li>Start with least privilege; expand only when you can explain the user value.</li>
-<li>
-<p>Expect variation between servers (supported scopes and policy decisions).</p>
+<li>Expect variation between servers (supported scopes and policy decisions).</li>
+</ul>
 </li>
 <li>
 <p><strong>Terminology is the difference between “works” and “clinically correct”</strong></p>
-</li>
+<ul>
 <li>If you query by strings (“glucose”), you’ll ship a fragile app.</li>
 <li>Query by codes (LOINC/SNOMED/RxNorm) and be explicit about systems.</li>
+</ul>
+</li>
 </ol>
 <h3 id="practical-implementation">Practical Implementation</h3>
 <p>The interactive React application demonstrates:</p>
